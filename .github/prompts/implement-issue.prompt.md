@@ -1,124 +1,140 @@
-# Implement Issue Prompt
+---
+description: "Implement a GitHub Issue following project rules, specifications, architecture, contracts, tests, and validation requirements."
+---
 
-このPromptは、GitHub Issueに記載された機能追加・改善を実装するための標準手順を定義する。
+# Implement Issue
 
-## 目的
+## Objective
 
-- Issueの **What / Why / Acceptance Criteria** を確認したうえで、最小変更で実装する
-- Repository Rules、Specification、Architecture、API Contractと矛盾しない形で変更する
+Implement the requested GitHub Issue while preserving the project's requirements, architecture, contracts, and existing behavior.
 
-## Promptの責務
+## Phase 1: Understand the Issue
 
-- このPromptは **How to investigate / implement / test / report** を補助する
-- **Issue = What**、**Prompt = How** として扱う
-- `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/` を上書きしない
-- Project Specification / Architecture / API Contract と矛盾する場合はそちらを優先する
+Read:
 
-## 作業前確認
+1. GitHub Issue
+2. Acceptance Criteria
+3. Related Requirements
+4. Related Business Rules
+5. Related Architecture
+6. Related API/Data Contract
 
-以下を順番に確認する。
+Determine:
 
-1. Issue
-   - Background
-   - Purpose
-   - Scope
-   - Non-scope
-   - Requirements
-   - Constraints
-   - Acceptance Criteria
-2. Repository Rules
-   - `.github/copilot-instructions.md`
-   - `AGENTS.md`
-   - 関連する `.github/instructions/`
-3. Project Documents
-   - `docs/specifications/`
-   - `docs/architecture/`
-   - `docs/api/`
-   - 必要に応じて `docs/development/`
-4. Existing Code / Tests
-   - 関連Component
-   - 関連Service
-   - 関連Model
-   - 関連Test
-   - 呼び出し元
-5. 変更範囲
-   - 影響するファイル
-   - 影響するモジュール
-   - 依存先 / 利用者
+- required behavior
+- affected components
+- expected outputs
+- constraints
+- explicit non-goals
 
-情報が不足している場合は、推測で仕様を補完せず確認を求める。
+Do not implement yet.
 
-## 必須フロー
+## Phase 2: Investigate Existing Code
 
-Issue確認
-↓
-Requirements確認
-↓
-Architecture確認
-↓
-既存実装調査
-↓
-既存Test調査
-↓
-影響範囲確認
-↓
-実装計画
-↓
-Implementation
-↓
-Test追加・変更
-↓
-Test
-↓
-Lint / Format
-↓
-Build
-↓
-Diff Review
-↓
-完了報告
+Search for:
 
-## 調査手順
+- related components
+- similar implementations
+- existing services
+- existing repositories
+- existing utilities
+- API clients
+- related tests
 
-- Acceptance Criteriaを満たすために必要な最小変更を特定する
-- 既存の責務境界・依存方向・API Contractを確認する
-- 既存の実装パターンと既存Testの書き方を確認する
-- 変更の副作用と未変更でよい範囲を明確にする
+Prefer existing patterns when they satisfy the requirement.
 
-## 実行手順
+Do not create duplicate abstractions without justification.
 
-- 最小の変更でAcceptance Criteriaを満たす
-- Issue外の改善、不要なRefactoring、不要なDependency追加を行わない
-- 既存Architecture / Contract / Test方針を壊さない
-- 必要な場合のみTestを追加または更新する
-- 実装後は変更ファイルと差分を確認し、意図しない変更を除去する
+## Phase 3: Define the Implementation Plan
 
-## 検証
+Before editing code, identify:
 
-変更内容に応じて必要な検証を実行する。
+1. files to change
+2. files to add
+3. files to remove, if any
+4. implementation approach
+5. test strategy
+6. validation commands
 
-- Unit Test
-- Integration Test
-- UI Test
-- Lint
-- Format
-- Build
-- API Contract Validation
+If the plan requires an architectural or contract change, stop and report it before implementation.
 
-実行していないものを `PASS` と報告してはいけない。実行できなかった場合は `NOT RUN` または `BLOCKED` と報告する。
+## Phase 4: Implement
 
-## 完了報告
+Implement the smallest change that satisfies the Issue.
 
-以下の形式で報告する。
+Rules:
 
-```md
-## Summary
-## Changed Files
-## Validation
-- Tests: PASS / FAIL / NOT RUN / BLOCKED
-- Lint: PASS / FAIL / NOT RUN / BLOCKED
-- Build: PASS / FAIL / NOT RUN / BLOCKED
-## Scope Review
-## Risks
-## Remaining Work
-```
+- preserve existing architecture
+- preserve existing contracts
+- avoid unrelated refactoring
+- reuse existing abstractions
+- maintain existing error handling conventions
+- do not introduce speculative functionality
+
+## Phase 5: Test
+
+Add or update tests for the changed behavior.
+
+Consider:
+
+- happy path
+- invalid input
+- boundary conditions
+- expected errors
+- regression cases
+
+## Phase 6: Validate
+
+Run the relevant:
+
+- tests
+- lint
+- formatter
+- build
+- contract validation
+
+Only report a check as successful if it was actually executed.
+
+## Phase 7: Review the Diff
+
+Inspect the final diff.
+
+Verify:
+
+- all changes are related to the Issue
+- no accidental files were changed
+- no secrets were introduced
+- no unrelated formatting changes exist
+- no existing behavior was unintentionally removed
+
+## Completion Report
+
+Report:
+
+### Summary
+
+What was implemented.
+
+### Changed Files
+
+List the changed files.
+
+### Tests
+
+Commands executed and results.
+
+### Build
+
+Command executed and result.
+
+### Lint / Format
+
+Commands executed and results.
+
+### Remaining Issues
+
+Any unresolved problems or decisions.
+
+### Scope
+
+Confirm whether unrelated changes were avoided.
