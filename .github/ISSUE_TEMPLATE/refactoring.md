@@ -1,3 +1,8 @@
+---
+name: Refactoring
+about: 既存 Behavior を維持する改善用の issue を作成する
+---
+
 # Refactoring
 
 ## Background

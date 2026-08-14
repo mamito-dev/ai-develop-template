@@ -1,3 +1,8 @@
+---
+name: Bug
+about: 不具合修正の issue を作成する
+---
+
 # Bug
 
 ## Background

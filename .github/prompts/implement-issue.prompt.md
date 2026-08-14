@@ -152,12 +152,4 @@ Confirm whether unrelated changes were avoided.
 
 Before reporting the task as complete, run the Completion Gate defined in `docs/ai/completion-gate.md`.
 
-Do not report `READY_FOR_REVIEW` when:
-
-- required Acceptance Criteria are not satisfied;
-- required validation has failed;
-- required validation has not been run;
-- an existing safety validation has failed;
-- a blocking issue remains.
-
-Report blockers and failures explicitly using the Completion Report format defined in `docs/ai/completion-gate.md`.
+Use `docs/ai/completion-gate.md` as the Source of Truth for `READY_FOR_REVIEW` criteria and for blocker / failure reporting format.

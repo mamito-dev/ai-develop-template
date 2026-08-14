@@ -123,48 +123,13 @@ Completion Gate の判定結果は `docs/ai/completion-gate.md` に定義され�
 
 AIは実装前に、必要なContextだけを段階的に読み込むこと。
 
-### 基本手順
+具体的な手順・Hierarchy・Conflict Detection・Context Budget は、`AGENTS.md` の `Context Loading` セクションを Source of Truth として参照すること。
 
-1. Issueを最後まで読む
-2. Taskを分類する（`FEATURE / BUG / REFACTOR / TEST / DOCUMENTATION / ARCHITECTURE / API / CONFIGURATION / SECURITY / UNKNOWN`）
-3. Repository Rules（`AGENTS.md`）を確認する
-4. Task-specific Instructions（`.github/instructions/`）を特定する
-5. 必要なSkills / Prompts（`.github/skills/`, `.github/prompts/`）を特定する
-6. 関連Documentation（`docs/`）を読む
-7. 関連実装と関連テストだけを調査する
-8. 安全に実装できる条件を満たしたらContext Loadingを停止する
-9. 追加の依存・リスク発見時のみ追加Contextを読む
-10. 理由なくRepository全体を無差別に読まない
+このファイルでは重複定義を行わず、以下のみを共通原則として扱う。
 
-### 原則
-
-- 「念のため」で全体を読まない
-- 上位ルールを先に読む（Global → Repository → Task）
-- 仕様推測より先にSource of Truthを確認する
-- 関係がないと判明したContextは判断材料として引きずらない
-- 同じ情報を複数ファイルへ重複記載しない
-- Generic KnowledgeでProject Ruleを上書きしない
-
-### Conflict / Unknown
-
-以下を検出した場合は、AIが独断で解決せず確認を求めること。
-
-- Issue と Documentation の矛盾
-- Documentation と Implementation の矛盾
-- Architecture の矛盾
-- API / Data Contract の矛盾
-- Unknown（必要情報不足）
-
-Assumptionを置く場合は、Assumptionであることを明示すること。
-
-### Context Budget
-
-Contextは以下の優先度で扱う。
-
-1. Critical（必須）
-2. Required（作業に必要）
-3. Relevant（必要に応じて）
-4. Optional（原則初期ロードしない）
+- Context は必要最小限だけを読む
+- 上位ルールから順に参照する
+- Issue / Documentation / Implementation / Contract 間の矛盾や Unknown を検出したら独断で解決せず確認する
 
 ---
 
