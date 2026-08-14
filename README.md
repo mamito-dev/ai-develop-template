@@ -38,6 +38,65 @@ GitHub Copilot などの AI を活用した開発を安定・一貫して行う�
 
 ---
 
+## Issue Template の使い分け
+
+このテンプレートには、通常 issue 向けの 4 テンプレートと、軽量な subtask テンプレートが含まれます。
+
+| テンプレート | 用途 |
+|----------|------|
+| `.github/ISSUE_TEMPLATE/feature.md` | 機能追加や仕様に基づく実装 |
+| `.github/ISSUE_TEMPLATE/bug.md` | 不具合修正 |
+| `.github/ISSUE_TEMPLATE/refactoring.md` | 既存 Behavior を維持する改善 |
+| `.github/ISSUE_TEMPLATE/architecture.md` | Architecture / Public Interface に影響する変更 |
+| `.github/ISSUE_TEMPLATE/subtask.md` | 親 issue から切り出した 1 コミット〜数ファイル単位の小さな作業 |
+
+通常 issue では要件・背景・制約を十分に書き、subtask では親 issue を前提に最小限の実装境界だけを明示してください。
+
+---
+
+## AI が安全に進めやすい Issue の書き方
+
+このテンプレートの AI ルールは、issue に書かれた情報を根拠に Scope 判定・Context Loading・Completion Gate を行います。
+
+特に以下を明示すると、AI が不要な確認で止まりにくくなります。
+
+### Scope / Non-Scope
+
+- 何をやるかだけでなく、何をやらないかも書く
+- 「ついでにやってよい改善」と「絶対に触らない箇所」を分けて書く
+- `.github/policies/change-safety-policy.md` の Restricted Change 判定の前提になる
+
+### Affected Components / Affected Files
+
+- 分かる範囲でよいので、影響範囲を先に書く
+- 粒度は「認証まわり」「API client 層」程度でもよい
+- `Expected Files vs Actual Changed Files` の確認基準として使える
+
+### Acceptance Criteria
+
+- 曖昧な表現ではなく、検証可能な条件を checkbox で書く
+- 例: 「ちゃんと動く」ではなく「X を入力したとき Y が返る」
+- Completion Gate はここをそのまま完了条件として使う
+
+### References
+
+- 関連する `docs/specifications/`、`docs/architecture/`、`docs/api/` を明示する
+- Progressive Context Loading により、関連リンクがあるほど AI が正確に必要箇所だけを読める
+
+### Restricted Change の明示
+
+- API / Data Contract / Architecture / Configuration / CI/CD などの Restricted Change を含む場合は issue に明記する
+- 例: `この issue では API フィールド追加を含む`
+- これがないと、AI は安全側に倒して実装を止めることがある
+
+### Subtask での Notes for AI
+
+- `subtask.md` では親 issue の文脈を短く要約する
+- 親 issue の Requirements / Architecture / Constraints のうち、この subtask に必要な部分だけを抜粋する
+- subtask 単体でも AI が安全に作業境界を理解しやすくなる
+
+---
+
 ## ドキュメント構成
 
 ### AI 開発ルール
