@@ -10,7 +10,7 @@ AIエージェントは作業開始前に本ドキュメントおよび `.github
 
 作業を開始する前に、以下の順序で情報を確認する。
 
-```
+```text
 Issue確認
 ↓
 仕様確認（docs/specifications/）
@@ -32,7 +32,7 @@ Architecture確認（docs/architecture/）
 
 確認が完了したら、以下の方針で実装を行う。
 
-```
+```text
 最小変更を選択
 ↓
 実装
@@ -54,7 +54,7 @@ Architecture確認（docs/architecture/）
 
 実装が完了したら、以下の検証を行う。
 
-```
+```text
 Test（テスト実行）
 ↓
 Lint / Format（コードスタイル確認）
@@ -73,7 +73,7 @@ Diff確認（意図しない変更がないか確認）
 作業完了時には、以下の項目を明示して報告する。
 
 | 項目 | 内容 |
-|------|------|
+| ---- | ---- |
 | 変更内容 | 何を・なぜ変更したか |
 | 変更ファイル | 変更したファイルの一覧 |
 | Test 結果 | テストの実行結果（Pass / Fail / Skip） |
@@ -87,7 +87,7 @@ Diff確認（意図しない変更がないか確認）
 ## 5. 参照ドキュメント
 
 | 種別 | 場所 |
-|------|------|
+| ---- | ---- |
 | Copilot 共通ルール | `.github/copilot-instructions.md` |
 | Architecture | `docs/architecture/` |
 | 仕様 | `docs/specifications/` |

@@ -6,7 +6,7 @@
 
 CI は単なる情報提供ではなく、**Merge 判断のための品質ゲート**として機能します。
 
-```
+```text
 AI Implementation
       ↓
 Pull Request
@@ -24,7 +24,7 @@ FAIL → AI investigates → Fix → CI
 ## Validation 一覧
 
 | Validation | ワークフロー | 目的 |
-|---|---|---|
+| --- | --- | --- |
 | Repository Structure | `ci.yml` | 必須ファイル・ディレクトリの存在確認 |
 | Documentation | `documentation.yml` | Markdown 構文・Broken Link・doc 構造 |
 | Markdown | `documentation.yml` | Code Fence・見出し・リスト構文 |
