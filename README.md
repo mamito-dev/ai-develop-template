@@ -22,6 +22,22 @@ GitHub Copilot などの AI を活用した開発を安定・一貫して行う�
 
 ---
 
+## テンプレート適用直後の必須作業
+
+このリポジトリの `docs/specifications/`、`docs/architecture/`、`docs/api/` は、**テンプレート自身** を説明する初期値です。
+
+新規プロジェクトへ適用したら、AI が誤ってこのテンプレートの説明を実プロジェクトの Source of Truth として扱わないよう、最初に以下を実施してください。
+
+1. `docs/specifications/` をプロジェクト固有の要件へ置き換える
+2. `docs/architecture/` をプロジェクト固有の構成へ置き換える
+3. `docs/api/` を実際の API / Data Contract へ置き換える
+4. `docs/development/` を実際のセットアップ・Build・Test・CI 手順へ更新する
+5. `.github/workflows/ci.yml` の `format-lint` / `test` / `build` プレースホルダーを実コマンドへ置き換える
+
+特に 5 は必須です。テンプレート初期状態の CI は、Repository / Documentation / Contract Validation は実行しますが、Format / Lint / Test / Build はプレースホルダー通知のみです。
+
+---
+
 ## ドキュメント構成
 
 ### AI 開発ルール
@@ -29,6 +45,7 @@ GitHub Copilot などの AI を活用した開発を安定・一貫して行う�
 | ファイル | 役割 |
 |----------|------|
 | `AGENTS.md` | AIエージェント向け作業手順・基本方針 |
+| `CLAUDE.md` | `AGENTS.md` へのポインタ（Claude Code 等向け） |
 | `.github/copilot-instructions.md` | AI 共通ルール・禁止事項 |
 | `.github/instructions/` | タスク別ルール（API / Architecture / Coding / Git / Testing） |
 | `.github/prompts/` | 再利用可能な Prompt |
@@ -98,3 +115,20 @@ Human Review
 ```
 
 詳細は `docs/development/` を参照してください。
+
+---
+
+## 軽量モードでの導入
+
+このテンプレートは、チーム開発や本番運用まで見据えたフル装備を含みます。
+
+個人開発や小規模プロジェクトでは、まず以下を必須セットとして採用し、必要に応じて拡張できます。
+
+- `AGENTS.md` / `.github/copilot-instructions.md` / `.github/instructions/`
+- `docs/specifications/` / `docs/architecture/` / `docs/api/` の最小限の Source of Truth
+- `docs/ai/completion-gate.md`
+- 実プロジェクト向けに更新した Validation / CI
+
+一方で、`docs/ai/regression-suite.md` や Incident 管理ドキュメントは、運用規模に応じて後から導入しても構いません。
+
+重要なのは、**採用しない要素がある場合は README や関連 docs に明記し、実際の運用とドキュメントを一致させること**です。

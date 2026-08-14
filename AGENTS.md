@@ -28,6 +28,14 @@ Architecture確認（docs/architecture/）
 
 ---
 
+## テンプレート適用時の注意
+
+このテンプレートを新規プロジェクトへ適用した直後は、`docs/specifications/`、`docs/architecture/`、`docs/api/` にテンプレート自身の説明が含まれている。
+
+実プロジェクトの Source of Truth として利用する前に、必ずプロジェクト固有の内容へ置き換えること。
+
+---
+
 ## Context Loading
 
 AIエージェントは **progressive context loading** を行い、必要な情報だけを順序付きで読み込む。
@@ -275,9 +283,7 @@ Completion Gate（docs/ai/completion-gate.md）
 
 ## 4. 完了報告
 
-作業完了を報告する前に、**必ず `docs/ai/completion-gate.md` に定義された Completion Gate を実行すること**。
-
-Completion Gate を通過していない状態で `READY_FOR_REVIEW` として報告してはいけない。
+作業完了を報告する前に、**必ず `docs/ai/completion-gate.md` に定義された Completion Gate を実行し、その判定基準と Completion Report 形式に従うこと**。
 
 作業完了時には、以下の項目を明示して報告する。
 

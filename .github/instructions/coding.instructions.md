@@ -62,12 +62,4 @@ AIは以下を優先する。
 
 作業完了を報告する前に、`docs/ai/completion-gate.md` に定義されたCompletion Gateを実行すること。
 
-以下の条件下では `READY_FOR_REVIEW` として報告してはいけない。
-
-- 必須のAcceptance Criteriaが未達である
-- 必須のValidationが失敗している
-- 必須のValidationが実行されていない（NOT_RUN）
-- 既存のChange Safety Validationが失敗している
-- Blockerが残っている
-
-Blockerや失敗は `docs/ai/completion-gate.md` に定義されたCompletion Report形式で明示的に報告すること。
+`READY_FOR_REVIEW` の判定条件、および Blocker / Failure の報告形式は `docs/ai/completion-gate.md` を Source of Truth とする。

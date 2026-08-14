@@ -6,6 +6,11 @@
 
 CI は単なる情報提供ではなく、**Merge 判断のための品質ゲート**として機能します。
 
+> [!IMPORTANT]
+> テンプレート初期状態の `.github/workflows/ci.yml` では、`format-lint` / `test` / `build` ジョブはプレースホルダーです。
+> 新規プロジェクトへ適用した直後に、プロジェクト固有の実コマンドへ置き換えてください。
+> 置き換えるまでは、Repository / Documentation / Contract Validation だけが実際の自動検証です。
+
 ```text
 AI Implementation
       ↓
