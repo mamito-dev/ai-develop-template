@@ -312,11 +312,9 @@ def validate_change_safety_policy(ctx: ValidationContext) -> None:
     }
     valid_values = {"allowed", "restricted", "forbidden"}
 
-    categories = list(changes.keys())
-    if len(categories) != len(set(categories)):
-        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, "changes に重複カテゴリがあります")
+    categories = set(changes.keys())
 
-    unknown_categories = sorted(set(categories) - supported_categories)
+    unknown_categories = sorted(categories - supported_categories)
     if unknown_categories:
         ctx.error(
             R.RULE_INVALID_CHANGE_SAFETY_POLICY,
@@ -324,7 +322,7 @@ def validate_change_safety_policy(ctx: ValidationContext) -> None:
             f"未対応カテゴリが含まれています: {', '.join(unknown_categories)}",
         )
 
-    missing_categories = sorted(supported_categories - set(categories))
+    missing_categories = sorted(supported_categories - categories)
     if missing_categories:
         ctx.error(
             R.RULE_INVALID_CHANGE_SAFETY_POLICY,
@@ -333,6 +331,8 @@ def validate_change_safety_policy(ctx: ValidationContext) -> None:
         )
 
     for category, value in changes.items():
+        if category not in supported_categories:
+            continue
         if value not in valid_values:
             ctx.error(
                 R.RULE_INVALID_CHANGE_SAFETY_POLICY,
