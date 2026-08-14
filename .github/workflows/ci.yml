@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Repository Structure Validation
+  # ──────────────────────────────────────────────
+  repository-validation:
+    name: Repository Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repository Structure Validation
+        run: bash scripts/validate/validate-repository.sh
+
+  # ──────────────────────────────────────────────
+  # Documentation & Markdown Validation
+  # ──────────────────────────────────────────────
+  documentation-validation:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Documentation Validation
+        run: bash scripts/validate/validate-docs.sh
+
+  # ──────────────────────────────────────────────
+  # API Contract Validation
+  # ──────────────────────────────────────────────
+  contract-validation:
+    name: Contract Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Contract Validation
+        run: bash scripts/validate/validate-contracts.sh
+
+  # ──────────────────────────────────────────────
+  # Format Check
+  # プロジェクトの技術スタックに応じてコマンドを設定してください
+  # ──────────────────────────────────────────────
+  format-lint:
+    name: Format & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # TODO: プロジェクトの Format Check コマンドを追加してください
+      # 例 (Node.js):
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v4
+      #     with:
+      #       node-version: "20"
+      #   - name: Install dependencies
+      #     run: npm ci
+      #   - name: Format Check
+      #     run: npm run format:check
+      #   - name: Lint
+      #     run: npm run lint
+      - name: Format & Lint (placeholder)
+        run: |
+          echo "::notice::Format / Lint の設定がまだ完了していません。"
+          echo "プロジェクトの技術スタックに応じて .github/workflows/ci.yml の"
+          echo "format-lint ジョブにコマンドを追加してください。"
+          echo ""
+          echo "参考: docs/development/ci.md"
+
+  # ──────────────────────────────────────────────
+  # Unit Test
+  # プロジェクトの技術スタックに応じてコマンドを設定してください
+  # ──────────────────────────────────────────────
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # TODO: プロジェクトのテストコマンドを追加してください
+      # 例 (Node.js):
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v4
+      #     with:
+      #       node-version: "20"
+      #   - name: Install dependencies
+      #     run: npm ci
+      #   - name: Unit Test
+      #     run: npm test
+      - name: Unit Test (placeholder)
+        run: |
+          echo "::notice::Unit Test の設定がまだ完了していません。"
+          echo "プロジェクトの技術スタックに応じて .github/workflows/ci.yml の"
+          echo "test ジョブにコマンドを追加してください。"
+          echo ""
+          echo "参考: docs/development/test.md"
+
+  # ──────────────────────────────────────────────
+  # Build
+  # プロジェクトの技術スタックに応じてコマンドを設定してください
+  # ──────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # TODO: プロジェクトのビルドコマンドを追加してください
+      # 例 (Node.js):
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v4
+      #     with:
+      #       node-version: "20"
+      #   - name: Install dependencies
+      #     run: npm ci
+      #   - name: Build
+      #     run: npm run build
+      - name: Build (placeholder)
+        run: |
+          echo "::notice::Build の設定がまだ完了していません。"
+          echo "プロジェクトの技術スタックに応じて .github/workflows/ci.yml の"
+          echo "build ジョブにコマンドを追加してください。"
+          echo ""
+          echo "参考: docs/development/build.md"

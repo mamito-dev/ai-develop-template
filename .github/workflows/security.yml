@@ -1,0 +1,155 @@
+name: Security
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [main]
+  schedule:
+    # 毎週月曜 00:00 UTC に定期実行
+    - cron: "0 0 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Secret Detection
+  # ──────────────────────────────────────────────
+  secret-detection:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 全履歴を取得してコミット履歴も検査
+          fetch-depth: 0
+
+      - name: Secret Detection (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: false
+        # continue-on-error を使用する理由:
+        #   Gitleaks のステップ自体は失敗させず、次の "Report Gitleaks result" ステップで
+        #   エラーメッセージと修正手順を出力してから exit 1 で明示的に失敗させるため。
+        #   これにより CI ログに具体的な修正アクションを残すことができる。
+        #   注意: この continue-on-error は意図的なものであり、Security Scan の無効化ではない。
+        continue-on-error: true
+        id: gitleaks
+
+      - name: Report Gitleaks result
+        if: steps.gitleaks.outcome == 'failure'
+        run: |
+          echo "::error::Secret が検出されました。"
+          echo ""
+          echo "Command: gitleaks detect --source . --verbose"
+          echo ""
+          echo "Action:"
+          echo "  1. 検出された Secret を確認する"
+          echo "  2. Secret を Git 履歴から削除する（git filter-repo 等）"
+          echo "  3. 該当する API Key / Token を無効化する"
+          echo "  4. Secret は環境変数または GitHub Secrets で管理する"
+          echo ""
+          echo "参考: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository"
+          exit 1
+
+      - name: Secret File Detection
+        run: |
+          ERRORS=0
+          FORBIDDEN_PATTERNS=(
+            ".env"
+            ".env.local"
+            ".env.production"
+            ".env.staging"
+            "*.pem"
+            "*.key"
+            "credentials.*"
+            "secrets.*"
+            "secret.*"
+          )
+          for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
+            while IFS= read -r found; do
+              echo "::error::禁止ファイルが追跡されています: $found"
+              echo "  File: $found"
+              echo "  Action: .gitignore に追加して git rm --cached で追跡を解除してください"
+              ERRORS=$((ERRORS + 1))
+            done < <(git ls-files | grep -E "$(echo "$pattern" | sed 's/\*/[^\/]*/g; s/\./\\./g')" 2>/dev/null || true)
+          done
+          if [[ $ERRORS -gt 0 ]]; then
+            echo ""
+            echo "Command: git ls-files | grep <pattern>"
+            echo "Action: 上記ファイルを .gitignore に追加し、git rm --cached <file> で追跡を解除してください"
+            exit 1
+          fi
+          echo "✅ Secret File Detection: PASS"
+
+  # ──────────────────────────────────────────────
+  # Dependency 変更検出
+  # ──────────────────────────────────────────────
+  dependency-validation:
+    name: Dependency Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Dependency Changes
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          DEPENDENCY_FILES=(
+            "package.json"
+            "package-lock.json"
+            "yarn.lock"
+            "pnpm-lock.yaml"
+            "requirements.txt"
+            "pyproject.toml"
+            "Pipfile"
+            "Pipfile.lock"
+            "go.mod"
+            "go.sum"
+            "Gemfile"
+            "Gemfile.lock"
+            "build.gradle"
+            "build.gradle.kts"
+            "pom.xml"
+            "Package.swift"
+            "Podfile"
+            "Podfile.lock"
+            "Cargo.toml"
+            "Cargo.lock"
+            "composer.json"
+            "composer.lock"
+          )
+
+          CHANGED_DEPS=()
+          for dep_file in "${DEPENDENCY_FILES[@]}"; do
+            if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -q "^$dep_file$"; then
+              CHANGED_DEPS+=("$dep_file")
+            fi
+          done
+
+          if [[ ${#CHANGED_DEPS[@]} -gt 0 ]]; then
+            echo "::warning::Dependency ファイルが変更されています:"
+            for f in "${CHANGED_DEPS[@]}"; do
+              echo "  変更: $f"
+            done
+            echo ""
+            echo "確認事項:"
+            echo "  1. Dependency 追加理由が Issue に記載されているか"
+            echo "  2. 既存 Dependency で代替できないか"
+            echo "  3. Security 上の問題がないか（CVE 等）"
+            echo "  4. License 上の問題がないか"
+            echo "  5. PR の説明に Dependency 変更が明示されているか"
+            echo ""
+            echo "上記を確認の上、PR の説明を更新してください。"
+            echo "問題がなければこの Warning は無視してください。"
+          else
+            echo "✅ Dependency Validation: 変更なし"
+          fi
