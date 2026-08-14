@@ -1,0 +1,30 @@
+name: AI Documentation Validation
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-ai-docs:
+    name: AI Documentation Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate AI Documentation
+        run: python scripts/ai-docs/validate.py

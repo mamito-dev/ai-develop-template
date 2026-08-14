@@ -1,0 +1,34 @@
+version: 1
+
+# AI Documentation Manifest
+# AI向けDocumentation全体の構成を定義します。
+# Validation Toolはこのファイルを参照してRepository Structureを検証します。
+
+# 必須ファイル（存在しない場合 ERROR）
+required:
+  - .github/copilot-instructions.md
+  - AGENTS.md
+
+# Optionalディレクトリ（存在すれば命名規則・構造を検証）
+optional:
+  - .github/instructions/
+  - .github/prompts/
+  - .github/skills/
+
+# Source of Truth の定義
+# 各DomainのPrimary Source of Truthを指定します。
+source_of_truth:
+  requirements: docs/specifications/
+  architecture: docs/architecture/
+  api: docs/api/
+  development: docs/development/
+
+# Validation設定
+validation:
+  markdown: true
+  links: true
+  paths: true
+  structure: true
+  source_of_truth: true
+  naming_convention: true
+  metadata: true

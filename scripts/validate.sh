@@ -7,6 +7,7 @@
 #   ./scripts/validate.sh repository    # Repository 構造のみ
 #   ./scripts/validate.sh docs          # Documentation のみ
 #   ./scripts/validate.sh contracts     # API Contract のみ
+#   ./scripts/validate.sh ai-docs       # AI Documentation のみ
 #   ./scripts/validate.sh all           # 全 Validation（デフォルトと同じ）
 set -euo pipefail
 
@@ -46,10 +47,14 @@ case "$TARGET" in
   contracts)
     run_validate "Contract Validation" "validate-contracts.sh"
     ;;
+  ai-docs)
+    run_validate "AI Docs Validation" "validate-ai-docs.sh"
+    ;;
   all | *)
     run_validate "Repository Validation"    "validate-repository.sh"
     run_validate "Documentation Validation" "validate-docs.sh"
     run_validate "Contract Validation"      "validate-contracts.sh"
+    run_validate "AI Docs Validation"       "validate-ai-docs.sh"
 
     # ──────────────────────────────────────────────────────────
     # プロジェクト固有の Validation をここに追加してください
