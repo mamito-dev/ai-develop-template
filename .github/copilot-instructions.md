@@ -89,6 +89,18 @@ AIはコードを書いただけで「完了」と判断してはいけない。
 - Build（ビルド確認）
 - Contract validation（API Contract の検証）
 
+上記の検証を完了した後、**必ず `docs/ai/completion-gate.md` に定義された Completion Gate を実行すること**。
+
+以下の条件下では `READY_FOR_REVIEW` として報告してはいけない。
+
+- 必須の Acceptance Criteria が未達である
+- 必須の Validation が失敗している
+- 必須の Validation が実行されていない（NOT_RUN）
+- 既存の Change Safety Validation が失敗している
+- Blocker が残っている
+
+Completion Gate の判定結果は `docs/ai/completion-gate.md` に定義された Completion Report 形式で明示的に報告すること。
+
 ---
 
 ## 7. 参照ドキュメント
@@ -103,6 +115,7 @@ AIはコードを書いただけで「完了」と判断してはいけない。
 | AIエージェント手順 | `AGENTS.md` |
 | 個別ルール | `.github/instructions/` |
 | 再利用可能Prompt | `.github/prompts/` |
+| Completion Gate | `docs/ai/completion-gate.md` |
 
 ---
 
