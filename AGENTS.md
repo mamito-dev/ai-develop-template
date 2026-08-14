@@ -265,6 +265,8 @@ Lint / Format（コードスタイル確認）
 Build（ビルド確認）
 ↓
 Diff確認（意図しない変更がないか確認）
+↓
+Completion Gate（docs/ai/completion-gate.md）
 ```
 
 > TODO: プロジェクト固有のコマンドが確定次第、ここに記載すること。
@@ -272,6 +274,10 @@ Diff確認（意図しない変更がないか確認）
 ---
 
 ## 4. 完了報告
+
+作業完了を報告する前に、**必ず `docs/ai/completion-gate.md` に定義された Completion Gate を実行すること**。
+
+Completion Gate を通過していない状態で `READY_FOR_REVIEW` として報告してはいけない。
 
 作業完了時には、以下の項目を明示して報告する。
 
@@ -284,6 +290,10 @@ Diff確認（意図しない変更がないか確認）
 | Lint 結果 | Lint チェックの結果 |
 | 未解決事項 | 判断できなかった点・確認が必要な点 |
 | 注意事項 | レビュアーへの申し送り事項 |
+
+Completion Report は `docs/ai/completion-gate.md` に定義された形式で出力すること。
+
+`READY_FOR_REVIEW` は Human Review の完了を意味しない。
 
 ---
 
@@ -299,6 +309,7 @@ Diff確認（意図しない変更がないか確認）
 | Change Safety Policy | `.github/policies/change-safety-policy.md` |
 | 個別ルール | `.github/instructions/` |
 | 再利用可能Prompt | `.github/prompts/` |
+| Completion Gate | `docs/ai/completion-gate.md` |
 
 ---
 
