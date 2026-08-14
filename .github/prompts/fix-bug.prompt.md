@@ -1,99 +1,98 @@
-# Fix Bug Prompt
+---
+description: "Diagnose and fix a bug while preserving existing behavior and adding regression coverage."
+---
 
-このPromptは、Bugの原因を特定し、Regression Testを追加したうえで修正するための標準手順を定義する。
+# Fix Bug
 
-## 目的
+## Objective
 
-- Bugを再現し、Root Causeを特定したうえで最小修正を行う
-- 同じBugが再発した場合に失敗するRegression Testを可能な限り追加する
+Identify the root cause of the reported bug, implement the smallest safe fix, and add regression coverage.
 
-## Promptの責務
+## Phase 1: Reproduce
 
-- このPromptは **How to investigate / fix / test / report** を補助する
-- `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/` を上書きしない
-- Specification / Architecture / API Contract と矛盾する場合はそちらを優先する
+Determine:
 
-## 作業前確認
+- reproduction steps
+- expected result
+- actual result
+- environment
+- relevant input/state
 
-1. Bugの内容
-   - 期待される動作
-   - 実際の動作
-   - 再現条件
-   - 影響範囲
-2. Repository Rules
-3. 関連Specification / Architecture / API Contract
-4. 関連コード
-5. 関連Test
+Attempt to reproduce the issue.
 
-情報が不足している場合は、推測で修正方針を決めず確認を求める。
+If reproduction is impossible, clearly state that.
 
-## 必須フロー
+## Phase 2: Investigate
 
-Bug確認
-↓
-再現
-↓
-Root Cause特定
-↓
-最小修正
-↓
-Regression Test追加
-↓
-関連Test
-↓
-Build
-↓
-Diff Review
+Trace the relevant execution path.
 
-## 修正原則
+Inspect:
 
-AIは症状を隠すだけの修正を行わない。以下は禁止。
+- input
+- validation
+- state
+- transformations
+- dependencies
+- persistence
+- external calls
+- error handling
 
-- Errorを無視する
-- Exceptionを握りつぶす
-- Testを削除する
-- TestをSkipする
-- Validationを無効化する
-- Timeoutを不当に延長する
-- 常に成功を返す
+## Phase 3: Identify Root Cause
 
-## 調査手順
+Distinguish:
 
-- Bugを再現し、入力・状態・環境条件を整理する
-- EvidenceにもとづいてRoot Causeを特定する
-- 既存の責務境界・呼び出し元・副作用を確認する
-- 修正範囲を最小に保つ
+- symptom
+- direct cause
+- root cause
 
-## 実行手順
+Do not implement a workaround without understanding why the bug occurs unless an explicit emergency workaround is required.
 
-- Root Causeに直接対応する最小修正を行う
-- 可能な限りRegression Testを追加する
-- 既存Testを弱めて成功させない
-- 実装後に差分を確認し、Issue外の変更を除去する
+## Phase 4: Plan
 
-## 検証
+Define:
 
-- Bug再現手順の再確認
-- Regression Test
-- 関連Test
-- Build
-- 必要に応じて Lint / Format
+- files to change
+- root cause
+- proposed fix
+- regression test
+- validation steps
 
-実行していないものを `PASS` と報告してはいけない。
+## Phase 5: Implement
 
-## 完了報告
+Implement the smallest fix that resolves the root cause.
 
-以下の形式で報告する。
+Avoid unrelated refactoring.
 
-```md
-## Bug
-## Root Cause
-## Fix
-## Regression Test
-## Validation
-- Tests:
-- Lint:
-- Build:
-## Risks
-## Remaining Issues
-```
+## Phase 6: Regression Test
+
+Add or update a test that fails before the fix and passes after the fix whenever practical.
+
+Also verify relevant existing tests.
+
+## Phase 7: Validate
+
+Run:
+
+- regression test
+- related tests
+- full test suite when appropriate
+- lint
+- build
+
+## Completion Report
+
+Report:
+
+### Bug
+
+### Root Cause
+
+### Fix
+
+### Regression Test
+
+### Tests Executed
+
+### Build / Lint
+
+### Remaining Risks

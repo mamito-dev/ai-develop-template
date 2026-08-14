@@ -1,127 +1,132 @@
-# Review Code Prompt
+---
+description: "Review code against requirements, architecture, contracts, correctness, security, maintainability, and tests."
+---
 
-このPromptは、Pull Request、Issue実装、AI生成コードなどをレビューするための標準手順を定義する。
+# Review Code
 
-## 目的
+## Objective
 
-- 要件、Architecture、Contract、Test、Security、Scopeの観点から変更を評価する
-- 個人的な好みではなく、根拠のある指摘のみを報告する
+Review the requested changes and identify correctness, design, security, testing, and maintainability problems.
 
-## Promptの責務
+Do not modify code unless explicitly requested.
 
-- このPromptは **How to review / report** を補助する
-- `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/` を上書きしない
-- Specification / Architecture / API Contract と矛盾する場合はそちらを優先する
+## Phase 1: Understand the Change
 
-## 作業前確認
+Read:
 
-1. 対象Issue / PRの目的
+1. Issue
 2. Acceptance Criteria
-3. 関連Specification / Architecture / API Contract
-4. 変更差分
-5. 関連コード
-6. 関連Test
+3. Requirements
+4. Business Rules
+5. Architecture
+6. API/Data Contract
 
-## 必須フロー
+Determine what the change is supposed to accomplish.
 
-Issue / PR確認
-↓
-Requirements確認
-↓
-Diff確認
-↓
-関連コード調査
-↓
-関連Test調査
-↓
-観点別レビュー
-↓
-指摘レベル分類
-↓
-レビュー結果報告
+## Phase 2: Inspect the Diff
 
-## 調査手順
+Check:
 
-- 対象Issue / PRの要求と差分を照合する
-- 関連コード、関連Test、影響範囲を確認する
-- 変更前提と実装意図が差分から読み取れるかを確認する
+- changed files
+- added files
+- deleted files
+- configuration changes
+- dependency changes
+- generated files
 
-## レビュー項目
+Identify unrelated changes.
 
-### Functional Correctness
+## Phase 3: Review Correctness
 
-- Requirementsを満たしているか
-- Acceptance Criteriaを満たしているか
-- Edge Caseに問題がないか
+Check:
 
-### Architecture
+- expected behavior
+- edge cases
+- error handling
+- state transitions
+- concurrency where relevant
+- compatibility
+- regression risks
 
-- Architectureに違反していないか
-- Component責務が適切か
-- Dependency方向が適切か
+## Phase 4: Review Architecture
 
-### API / Data
+Check:
 
-- Contract違反がないか
-- Breaking Changeがないか
-- Data Integrityに問題がないか
+- component responsibilities
+- dependency direction
+- abstraction boundaries
+- duplication
+- inappropriate coupling
+- unnecessary architectural changes
 
-### Testing
+## Phase 5: Review API / Contract
 
-- 必要なTestが存在するか
-- Testが十分か
-- Testを弱めていないか
+Check:
 
-### Security
+- request compatibility
+- response compatibility
+- field semantics
+- error contract
+- versioning
+- backward compatibility
 
-- Secret Leakage
-- Authorization
-- Input Validation
-- Unsafe Data Handling
+## Phase 6: Review Security
 
-### Scope
+Check for:
 
-- Issue外の変更がないか
-- 不要なRefactoringがないか
-- 不要なDependencyがないか
+- secret exposure
+- unsafe input handling
+- authentication issues
+- authorization issues
+- insecure storage
+- sensitive information leakage
 
-## 指摘レベル
+## Phase 7: Review Tests
 
-- `BLOCKER`: Merge前に必ず修正が必要
-  - 例: Security vulnerability、Data corruption、Major functional failure、Architecture violation
-- `HIGH`: 重大な問題
-- `MEDIUM`: 修正を推奨する問題
-- `LOW`: 改善提案
+Check:
 
-単なる個人的な好みは問題として報告しない。
+- meaningful coverage
+- happy path
+- failure path
+- boundary conditions
+- regression coverage
+- test quality
 
-## 実行手順
+Do not require tests that provide no meaningful value.
 
-- 指摘には根拠、影響、必要であれば再現条件を含める
-- 明確な根拠がない懸念は `NEEDS INVESTIGATION` として扱う
-- Positive Findings があれば簡潔に記録する
+## Severity
 
-## 検証
+Classify findings as:
 
-- Diffと要求の突合
-- Contract / Architecture / Test / Security観点の確認
-- 必要な追加検証の有無を整理
+### Critical
 
-実施していない確認を断定的に成功扱いしない。
+Must be fixed before merge.
 
-## 完了報告
+### High
 
-レビュー結果は以下の形式で報告する。
+Strongly recommended before merge.
 
-```md
-## Summary
-## BLOCKER
-## HIGH
-## MEDIUM
-## LOW
-## Positive Findings
-## Recommendation
-- APPROVE
-- REQUEST CHANGES
-- NEEDS INVESTIGATION
-```
+### Medium
+
+Should be addressed unless there is a documented reason not to.
+
+### Low
+
+Improvement that does not materially block the change.
+
+### Informational
+
+Observation or optional suggestion.
+
+## Completion Report
+
+For each finding provide:
+
+- severity
+- file
+- location
+- problem
+- impact
+- recommendation
+
+If no issue is found, explicitly state what was checked.

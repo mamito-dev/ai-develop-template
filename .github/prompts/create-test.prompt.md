@@ -1,110 +1,90 @@
-# Create Test Prompt
+---
+description: "Create meaningful tests for existing or newly implemented behavior."
+---
 
-このPromptは、既存機能または新機能に対するTestを追加するための標準手順を定義する。
+# Create Test
 
-## 目的
+## Objective
 
-- Requirement / Behavior に対応する意味のあるTestを追加する
-- 既存のTest基盤、Test Pattern、Repository Rulesに従って検証を強化する
+Create tests that verify observable behavior and protect against regressions.
 
-## Promptの責務
+## Phase 1: Understand the Behavior
 
-- このPromptは **How to design / implement / validate tests** を補助する
-- `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/` を上書きしない
-- Specification / Architecture / API Contract と矛盾する場合はそちらを優先する
+Read:
 
-## 作業前確認
+1. Issue
+2. Requirements
+3. Business Rules
+4. Relevant Architecture
+5. Existing implementation
+6. Existing tests
 
-1. Requirement / 対象Behavior
-2. 関連Issueまたは仕様
-3. Repository Rules
-4. 既存Test
-5. Test Pattern
-6. 変更対象コードと影響範囲
+Determine the behavior that must be protected.
 
-情報が不足している場合は、推測で仕様を追加しない。
+## Phase 2: Inspect Existing Tests
 
-## 必須フロー
+Search for:
 
-Requirement確認
-↓
-対象Behavior確認
-↓
-Existing Test調査
-↓
-Test Pattern確認
-↓
-Test Case設計
-↓
-Test実装
-↓
-Test実行
+- related test files
+- similar test cases
+- shared fixtures
+- test helpers
+- mocks
+- test utilities
 
-## Test Case検討
+Reuse existing test patterns.
 
-必要に応じて以下を検討する。
+## Phase 3: Identify Scenarios
 
-- 正常系
-- 異常系
-- Boundary
-- Invalid Input
-- Error
-- Regression
-- State Transition
+Consider:
 
-意味のないTest Caseは増やさない。
+- happy path
+- invalid input
+- boundary values
+- expected errors
+- state transitions
+- regression scenarios
 
-## Test設計原則
+Only add scenarios relevant to the behavior.
 
-Testは可能な限り以下を満たす。
+## Phase 4: Implement Tests
 
-- Deterministic
-- 独立
-- 明確なFailure Message
-- Behavior Based
+Tests should:
 
-## 調査手順
+- have clear names
+- be deterministic
+- test observable behavior
+- minimize unnecessary implementation coupling
+- follow existing project conventions
 
-- Requirementと対象Behaviorを分解する
-- 既存Testの対象範囲と不足分を確認する
-- 同種の既存Testから命名、構成、アサーション方針を確認する
+Do not create tests that merely reproduce private implementation details.
 
-## 禁止事項
+## Phase 5: Run Tests
 
-以下を目的としたTestを作成しない。
+Run the newly created tests.
 
-- Coverage数字だけを上げる
-- Implementation Detailを過剰に固定する
-- 実装を変更しないと成立しないTest
-- 意味のない重複Test
+Then run relevant existing tests.
 
-## 実行手順
+## Phase 6: Validate
 
-- 既存のTestスタイル、命名、セットアップ方法を確認する
-- 外部から観測可能なBehaviorを対象にTestを設計する
-- 必要最小限のTest追加・更新にとどめる
-- 追加したTestが失敗すべき条件で失敗することを確認する
+Confirm:
 
-## 検証
+- test passes
+- test fails for the expected reason when the protected behavior is intentionally broken, where practical
+- no unrelated tests were weakened
 
-- 追加 / 更新したTestの実行
-- 必要に応じて関連Testの実行
-- 必要に応じて Build / Lint / Format の確認
+## Completion Report
 
-実行していない検証を `PASS` と報告してはいけない。
+Report:
 
-## 完了報告
+### Test Objective
 
-以下の形式で報告する。
+### Scenarios Covered
 
-```md
-## Summary
-## Target Behavior
-## Test Cases
-## Validation
-- Tests: PASS / FAIL / NOT RUN / BLOCKED
-- Lint: PASS / FAIL / NOT RUN / BLOCKED
-- Build: PASS / FAIL / NOT RUN / BLOCKED
-## Risks
-## Remaining Work
-```
+### Files Changed
+
+### Commands Executed
+
+### Results
+
+### Remaining Coverage Gaps
