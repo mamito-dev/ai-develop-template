@@ -314,7 +314,7 @@ def validate_directory_structure(ctx: ValidationContext) -> None:
                 )
 
     ctx.info(
-        R.RULE_INVALID_NAMING_CONVENTION,
+        R.RULE_INFO,
         ".github/",
         f"Instructions: {len(ctx.instruction_files)} 件, "
         f"Prompts: {len(ctx.prompt_files)} 件, "
@@ -365,6 +365,9 @@ def validate_skills(ctx: ValidationContext) -> None:
         # メタデータ検証
         if meta:
             _validate_metadata(meta, rel, ctx)
+            # AI009: Prompt 参照検証
+            if "prompts" in meta:
+                _validate_prompt_references(meta["prompts"], rel, ctx)
 
 
 def validate_prompts(ctx: ValidationContext) -> None:
@@ -406,7 +409,6 @@ def validate_instructions(ctx: ValidationContext) -> None:
 def _validate_skill_references(skill_list: list[str], prompt_rel: str,
                                 ctx: ValidationContext) -> None:
     """AI008: Prompt から参照された Skill の存在確認"""
-    skills_dir = ctx.repo_root / ".github" / "skills"
     existing_skills = {d.name for d in ctx.skill_dirs}
 
     for skill_name in skill_list:
@@ -416,6 +418,25 @@ def _validate_skill_references(skill_list: list[str], prompt_rel: str,
                 prompt_rel,
                 f"参照された Skill が存在しません: {skill_name}",
                 detail=f"期待: .github/skills/{skill_name}/SKILL.md",
+            )
+
+
+def _validate_prompt_references(prompt_list: list[str], skill_rel: str,
+                                 ctx: ValidationContext) -> None:
+    """AI009: Skill から参照された Prompt の存在確認"""
+    existing_prompts = {f.stem.replace(".prompt", "") for f in ctx.prompt_files}
+    # prompt ファイル名から拡張子を除いた名前のセット（例: implement-issue）
+    existing_prompt_names = {
+        re.sub(r"\.prompt$", "", f.stem) for f in ctx.prompt_files
+    }
+
+    for prompt_name in prompt_list:
+        if prompt_name not in existing_prompt_names:
+            ctx.error(
+                R.RULE_MISSING_REFERENCED_PROMPT,
+                skill_rel,
+                f"参照された Prompt が存在しません: {prompt_name}",
+                detail=f"期待: .github/prompts/{prompt_name}.prompt.md",
             )
 
 
@@ -575,30 +596,33 @@ def validate_referenced_paths(ctx: ValidationContext) -> None:
 
 def validate_deprecated_references(ctx: ValidationContext) -> None:
     """AI010: Deprecated Document への参照検出"""
-    # まず deprecated なファイルを収集
-    deprecated_files: dict[str, str] = {}  # rel_path -> replacement
-
+    # 全 Markdown ファイルを1回のパスで収集し、deprecated ファイルと参照元を同時に処理
+    all_files: dict[str, tuple[Optional[str], str]] = {}  # rel_path -> (metadata_status, content)
     for md_file in ctx.repo_root.rglob("*.md"):
         content = read_text(md_file)
         if content is None:
             continue
-        meta, _ = parse_front_matter(content)
-        if meta.get("status") == "deprecated":
-            rel = relative(md_file, ctx.repo_root)
-            deprecated_files[rel] = meta.get("replacement", "")
+        meta, body = parse_front_matter(content)
+        rel = relative(md_file, ctx.repo_root)
+        all_files[rel] = (meta.get("status"), body)
+
+    # deprecated なファイルを特定
+    deprecated_files: dict[str, str] = {}  # rel_path -> replacement
+    for rel, (status, _) in all_files.items():
+        if status == "deprecated":
+            md_file = ctx.repo_root / rel
+            content = read_text(md_file)
+            if content:
+                meta, _ = parse_front_matter(content)
+                deprecated_files[rel] = meta.get("replacement", "")
 
     if not deprecated_files:
         return
 
-    # 全 Markdown ファイルのリンクから deprecated を参照しているか確認
-    for source_file in ctx.repo_root.rglob("*.md"):
-        content = read_text(source_file)
-        if content is None:
-            continue
-        rel = relative(source_file, ctx.repo_root)
-        _, body = parse_front_matter(content)
+    # 各ファイルのリンクから deprecated を参照しているか確認
+    for rel, (_, body) in all_files.items():
+        source_file = ctx.repo_root / rel
         links = extract_markdown_links(body)
-
         for text, href in links:
             resolved, _ = resolve_link(href, source_file, ctx.repo_root)
             if resolved is None:

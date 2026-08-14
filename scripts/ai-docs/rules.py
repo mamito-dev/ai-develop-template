@@ -20,6 +20,8 @@ RULE_SOURCE_OF_TRUTH_CONFLICT   = "AI011"
 RULE_INVALID_METADATA           = "AI012"
 RULE_INVALID_MANIFEST           = "AI013"
 RULE_INVALID_NAMING_CONVENTION  = "AI014"
+# 汎用 INFO ルール（統計情報・サマリー出力用）
+RULE_INFO                       = "AI000"
 
 # ──────────────────────────────────────────────────────────────
 # Severity Levels
@@ -111,6 +113,7 @@ PATH_PLACEHOLDER_PATTERNS = [
 # Rule descriptions (for reporting)
 # ──────────────────────────────────────────────────────────────
 RULE_DESCRIPTIONS = {
+    RULE_INFO:                          "Information / summary",
     RULE_REQUIRED_FILE_MISSING:         "Required file does not exist",
     RULE_BROKEN_INTERNAL_LINK:          "Broken internal link",
     RULE_INVALID_PATH_REFERENCE:        "Referenced path does not exist",
