@@ -28,6 +28,209 @@ Architecture確認（docs/architecture/）
 
 ---
 
+## Context Loading
+
+AIエージェントは **progressive context loading** を行い、必要な情報だけを順序付きで読み込む。
+
+### Context Hierarchy（Level 0〜5）
+
+```text
+Level 0: Global Rules
+    - .github/copilot-instructions.md
+Level 1: Repository Rules
+    - AGENTS.md
+Level 2: Task Rules
+    - .github/instructions/
+    - .github/prompts/
+    - .github/skills/
+Level 3: Domain Documentation
+    - docs/specifications/
+    - docs/architecture/
+    - docs/api/
+    - docs/development/
+Level 4: Existing Implementation
+    - 関連Source Code
+Level 5: Tests / Validation
+    - 関連Test
+    - Build / Lint / CI設定
+```
+
+### Required Order
+
+1. Issue
+2. Repository rules
+3. Task-specific instructions
+4. Relevant skills/prompts
+5. Relevant documentation
+6. Relevant source code
+7. Relevant tests
+
+関連しないファイルを網羅目的で読まないこと。
+
+### Task Classification
+
+```text
+FEATURE
+BUG
+REFACTOR
+TEST
+DOCUMENTATION
+ARCHITECTURE
+API
+CONFIGURATION
+SECURITY
+UNKNOWN
+```
+
+### TaskごとのContext Matrix
+
+| Task | Requirements | Architecture | API | Tests | Documentation |
+| ---- | ------------ | ------------ | --- | ----- | ------------- |
+| Feature | 必須 | 必須 | 必要時 | 必須 | 必要時 |
+| Bug | 必須 | 必要時 | 必要時 | 必須 | 必要時 |
+| Refactor | 必要 | 必須 | 必要時 | 必須 | 必要時 |
+| Test | 必要 | 必要時 | 必要時 | 必須 | 必要時 |
+| Documentation | 必要時 | 必要時 | 必要時 | 必要時 | 必須 |
+| Architecture | 必須 | 必須 | 必要時 | 必要時 | 必須 |
+| API | 必須 | 必須 | 必須 | 必須 | 必須 |
+| Configuration | 必要時 | 必要時 | 必要時 | 必要時 | 必須 |
+| Security | 必須 | 必須 | 必要時 | 必須 | 必須 |
+
+### Context Loading Algorithm
+
+```text
+START
+  ↓
+Read Issue
+  ↓
+Classify Task
+  ↓
+Read Global Rules
+  ↓
+Read Repository Rules
+  ↓
+Identify Required Instructions
+  ↓
+Identify Required Skills / Prompt
+  ↓
+Identify Relevant Documentation
+  ↓
+Identify Relevant Source Code
+  ↓
+Identify Relevant Tests
+  ↓
+Check for Conflicts / Unknowns
+  ↓
+Create Work Plan
+  ↓
+Begin Work
+```
+
+### Context Loadingの停止条件
+
+以下が満たされた時点で停止してよい。
+
+- [ ] Task scope is understood
+- [ ] Acceptance criteria are understood
+- [ ] Applicable rules are known
+- [ ] Relevant architecture is understood
+- [ ] Relevant contracts are understood
+- [ ] Affected components are identified
+- [ ] Test strategy is understood
+- [ ] No unresolved critical conflict exists
+
+### 追加ロード条件
+
+作業中に以下が見つかった場合のみ追加で読む。
+
+- New Component: component責務と関連architecture
+- API Change: API contract・API documentation・関連tests
+- Database Change: schema・migration rules・persistence layer
+- Security Impact: security rules・authn/authz rules・影響コード
+
+### Conflict Detection / Unknown Handling
+
+以下を検出したら停止して確認を求める（黙って解決しない）。
+
+- Issue vs Documentation conflict
+- Documentation vs Implementation conflict
+- Architecture conflict
+- API/Data Contract conflict
+- Unknown（仕様確定に必要な情報不足）
+
+Assumptionを置く場合は、Assumptionであることを明示する。
+
+### Context Priority / Budget
+
+```text
+Critical
+  ↓
+Required
+  ↓
+Relevant
+  ↓
+Optional
+```
+
+- 無関係なContextを読まない
+- 同一情報の重複記載・重複読込を避ける
+- Repository全体の無差別読込を禁止する
+
+### Skills / Promptsとの関係
+
+```text
+Context Loading
+       ↓
+Applicable Skills Identification
+       ↓
+Skill / Prompt Execution
+```
+
+例:
+
+- Feature: `issue-analysis` → `implementation` → `testing` → `documentation`
+- Bug: `investigate-issue.prompt.md` / `fix-bug.prompt.md` + `implementation` + `testing`
+
+### 既存Instructionsとの重複整理方針
+
+`.github/instructions/` の既存ファイル（api / architecture / coding / testing / git）をTask RuleのSource of Truthとして使用し、同等内容の新規Instructionを重複作成しない。
+
+### Context Loading Report（大きなIssue向け）
+
+必要に応じて作業開始前に以下を簡潔に出力する。
+
+```markdown
+## Context Loading Report
+
+### Task Type
+- FEATURE / BUG / ...
+
+### Loaded Rules
+- `.github/copilot-instructions.md`
+- `AGENTS.md`
+- relevant task instructions
+
+### Loaded Skills / Prompts
+- relevant skills/prompts
+
+### Loaded Documentation
+- relevant requirements / architecture / API contract
+
+### Loaded Code
+- relevant components
+
+### Loaded Tests
+- relevant tests
+
+### Additional Context Required
+- None / details
+
+### Conflicts
+- None / details
+```
+
+---
+
 ## 2. 実装
 
 確認が完了したら、以下の方針で実装を行う。
