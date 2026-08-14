@@ -32,3 +32,11 @@ restricted_paths:
   - "migrations/**"
   - "infra/**"
   - "terraform/**"
+
+# Completion Gate 設定
+completion:
+  enabled: true
+  require_acceptance_criteria_check: true
+  require_validation_result: true
+  require_safety_check: true
+  require_completion_report: true

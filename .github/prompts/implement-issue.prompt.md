@@ -147,3 +147,17 @@ Any unresolved problems or decisions.
 ### Scope
 
 Confirm whether unrelated changes were avoided.
+
+## Phase 8: Completion Gate
+
+Before reporting the task as complete, run the Completion Gate defined in `docs/ai/completion-gate.md`.
+
+Do not report `READY_FOR_REVIEW` when:
+
+- required Acceptance Criteria are not satisfied;
+- required validation has failed;
+- required validation has not been run;
+- an existing safety validation has failed;
+- a blocking issue remains.
+
+Report blockers and failures explicitly using the Completion Report format defined in `docs/ai/completion-gate.md`.
