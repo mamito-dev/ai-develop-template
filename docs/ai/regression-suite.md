@@ -73,7 +73,7 @@ AI Regression Suite
 
 ## Suite Result Rules
 
-- 1件でもCritical / Required Regression CaseがFAILした場合、Suite = FAILとして扱う。
+- 1件でもCRITICAL / HIGH Regression CaseがFAILした場合、Suite = FAILとして扱う。
 - NOT_RUNが存在する場合、Suite = FAILとして扱う（BLOCKEDを除く）。
 - Regression Suite FAILの状態でAI Rule変更を正常完了扱いにしない。
 
