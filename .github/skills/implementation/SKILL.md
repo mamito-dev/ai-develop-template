@@ -139,7 +139,8 @@ Implementation is not complete until relevant validation has been executed.
 - tests added/updated;
 - relevant validation passed;
 - documentation updated where required;
-- final diff reviewed.
+- final diff reviewed;
+- Completion Gate passed (see `docs/ai/completion-gate.md`).
 
 ## Output
 

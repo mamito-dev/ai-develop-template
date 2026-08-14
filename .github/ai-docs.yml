@@ -10,6 +10,7 @@ required:
   - AGENTS.md
   - .github/policies/change-safety-policy.md
   - .github/change-safety.yml
+  - docs/ai/completion-gate.md
 
 # Optionalディレクトリ（存在すれば命名規則・構造を検証）
 optional:
