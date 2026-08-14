@@ -1,3 +1,8 @@
+---
+name: Architecture Change
+about: Architecture や Public Interface に影響する変更の issue を作成する
+---
+
 # Architecture Change
 
 ## Background

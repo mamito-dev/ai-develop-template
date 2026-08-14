@@ -1,3 +1,8 @@
+---
+name: Feature
+about: 機能追加や仕様に基づく実装の issue を作成する
+---
+
 # Feature
 
 ## Background

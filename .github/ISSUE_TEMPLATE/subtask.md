@@ -1,3 +1,8 @@
+---
+name: Subtask
+about: 親 issue から切り出す軽量な subtask issue を作成する
+---
+
 # Subtask
 
 ## Parent Issue
