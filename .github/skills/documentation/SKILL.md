@@ -88,6 +88,10 @@ One piece of information should have one primary Source of Truth.
 - silently resolving specification conflicts;
 - changing requirements merely to match incorrect implementation.
 
+## Validation
+
+Documentation is not complete until the updated content accurately reflects the current implementation and all relevant sections have been reviewed for consistency.
+
 ## Completion Criteria
 
 - relevant documentation is updated;

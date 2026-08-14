@@ -105,6 +105,10 @@ Prefer behavior-based testing over implementation-detail testing.
 - adding meaningless coverage;
 - introducing flaky timing-dependent tests unnecessarily.
 
+## Validation
+
+Testing is not complete until all tests pass, relevant scenarios are covered, and no existing tests have been weakened or removed without justification.
+
 ## Completion Criteria
 
 - relevant scenarios are covered;

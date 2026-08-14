@@ -117,6 +117,10 @@ Review the implementation against project requirements, not personal preference.
 - requesting unnecessary refactoring;
 - treating personal style preference as a defect.
 
+## Validation
+
+Review is not complete until all categories (correctness, architecture, contract, security, tests, maintainability) have been evaluated and all findings are classified.
+
 ## Completion Criteria
 
 Every significant risk is:
