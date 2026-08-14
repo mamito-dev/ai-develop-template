@@ -251,6 +251,97 @@ def validate_required_files(ctx: ValidationContext) -> None:
                           f"必須ファイルが存在しません: {req}")
 
 
+def validate_change_safety_policy(ctx: ValidationContext) -> None:
+    """AI015: .github/change-safety.yml の構造検証"""
+    policy_path = ctx.repo_root / ".github" / "change-safety.yml"
+    rel = relative(policy_path, ctx.repo_root)
+
+    if not policy_path.exists():
+        # 必須ファイル扱いは AI001 / Manifest 側で検証
+        return
+
+    if not HAS_YAML:
+        ctx.warning(
+            R.RULE_INVALID_CHANGE_SAFETY_POLICY,
+            rel,
+            "PyYAML が未インストールのため change-safety.yml 検証をスキップします",
+        )
+        return
+
+    content = read_text(policy_path)
+    if content is None:
+        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, "change-safety.yml を読み込めません")
+        return
+
+    try:
+        data = yaml.safe_load(content) or {}
+    except yaml.YAMLError as e:
+        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, f"YAML 構文エラー: {e}")
+        return
+
+    if not isinstance(data, dict):
+        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, "トップレベルは mapping である必要があります")
+        return
+
+    if "version" not in data:
+        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, "version フィールドが存在しません")
+
+    changes = data.get("changes")
+    if not isinstance(changes, dict):
+        ctx.error(R.RULE_INVALID_CHANGE_SAFETY_POLICY, rel, "changes フィールドは mapping である必要があります")
+        return
+
+    supported_categories = {
+        "code",
+        "tests",
+        "documentation",
+        "dependency",
+        "api",
+        "database",
+        "architecture",
+        "configuration",
+        "security",
+        "ci_cd",
+        "infrastructure",
+        "generated",
+        "git",
+        "destructive",
+        "history_rewrite",
+        "secret_access",
+        "unknown",
+    }
+    valid_values = {"allowed", "restricted", "forbidden"}
+
+    categories = set(changes.keys())
+
+    unknown_categories = sorted(categories - supported_categories)
+    if unknown_categories:
+        ctx.error(
+            R.RULE_INVALID_CHANGE_SAFETY_POLICY,
+            rel,
+            f"未対応カテゴリが含まれています: {', '.join(unknown_categories)}",
+        )
+
+    missing_categories = sorted(supported_categories - categories)
+    if missing_categories:
+        ctx.error(
+            R.RULE_INVALID_CHANGE_SAFETY_POLICY,
+            rel,
+            f"必須カテゴリが不足しています: {', '.join(missing_categories)}",
+        )
+
+    for category, value in changes.items():
+        if category not in supported_categories:
+            continue
+        if value not in valid_values:
+            ctx.error(
+                R.RULE_INVALID_CHANGE_SAFETY_POLICY,
+                rel,
+                f"不正な Policy Value: {category}={value} "
+                f"(許可値: {', '.join(sorted(valid_values))})",
+            )
+
+
 def validate_directory_structure(ctx: ValidationContext) -> None:
     """Directory Structure と Naming Convention の検証"""
     github_dir = ctx.repo_root / ".github"
@@ -555,6 +646,7 @@ def validate_referenced_paths(ctx: ValidationContext) -> None:
     for glob_pattern in [
         ".github/instructions/*.instructions.md",
         ".github/prompts/*.prompt.md",
+        ".github/policies/*.md",
         ".github/skills/*/SKILL.md",
         "docs/**/*.md",
         ".github/copilot-instructions.md",
@@ -690,6 +782,7 @@ def print_results(ctx: ValidationContext, json_output: bool = False) -> None:
     categories = [
         ("Required files",        R.RULE_REQUIRED_FILE_MISSING),
         ("Manifest",              R.RULE_INVALID_MANIFEST),
+        ("Change safety policy",  R.RULE_INVALID_CHANGE_SAFETY_POLICY),
         ("Directory structure",   R.RULE_INVALID_NAMING_CONVENTION),
         ("Markdown links",        R.RULE_BROKEN_INTERNAL_LINK),
         ("Referenced paths",      R.RULE_INVALID_PATH_REFERENCE),
@@ -759,28 +852,31 @@ def run(repo_root: Path, json_output: bool = False) -> int:
     # 2. Required files
     validate_required_files(ctx)
 
-    # 3. Directory structure & naming
+    # 3. Change Safety Policy
+    validate_change_safety_policy(ctx)
+
+    # 4. Directory structure & naming
     validate_directory_structure(ctx)
 
-    # 4. Skills
+    # 5. Skills
     validate_skills(ctx)
 
-    # 5. Prompts
+    # 6. Prompts
     validate_prompts(ctx)
 
-    # 6. Instructions
+    # 7. Instructions
     validate_instructions(ctx)
 
-    # 7. Internal links
+    # 8. Internal links
     validate_markdown_links(ctx)
 
-    # 8. Referenced paths
+    # 9. Referenced paths
     validate_referenced_paths(ctx)
 
-    # 9. Deprecated references
+    # 10. Deprecated references
     validate_deprecated_references(ctx)
 
-    # 10. Source of truth (INFO)
+    # 11. Source of truth (INFO)
     validate_source_of_truth(ctx)
 
     # Report

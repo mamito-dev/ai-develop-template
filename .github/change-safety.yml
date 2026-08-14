@@ -1,0 +1,34 @@
+version: 1
+
+changes:
+  code: allowed
+  tests: allowed
+  documentation: allowed
+
+  dependency: restricted
+  api: restricted
+  database: restricted
+  architecture: restricted
+  configuration: restricted
+  security: restricted
+  ci_cd: restricted
+  infrastructure: restricted
+  generated: restricted
+  git: restricted
+  unknown: restricted
+
+  destructive: forbidden
+  history_rewrite: forbidden
+  secret_access: forbidden
+
+# CI 連携時に利用する想定のパス定義（初期値）
+forbidden_paths:
+  - ".env"
+  - ".env.production"
+  - "secrets/**"
+
+restricted_paths:
+  - ".github/workflows/**"
+  - "migrations/**"
+  - "infra/**"
+  - "terraform/**"

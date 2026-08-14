@@ -36,6 +36,13 @@ Check:
 
 Identify unrelated changes.
 
+Compare Expected Changes vs Actual Changed Files and verify:
+
+- scope compliant
+- no unauthorized dependency/API/database/configuration changes
+- no security regression
+- no destructive operation
+
 ## Phase 3: Review Correctness
 
 Check:

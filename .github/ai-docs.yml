@@ -8,12 +8,15 @@ version: 1
 required:
   - .github/copilot-instructions.md
   - AGENTS.md
+  - .github/policies/change-safety-policy.md
+  - .github/change-safety.yml
 
 # Optionalディレクトリ（存在すれば命名規則・構造を検証）
 optional:
   - .github/instructions/
   - .github/prompts/
   - .github/skills/
+  - .github/policies/
 
 # Source of Truth の定義
 # 各DomainのPrimary Source of Truthを指定します。
@@ -22,6 +25,7 @@ source_of_truth:
   architecture: docs/architecture/
   api: docs/api/
   development: docs/development/
+  policies: .github/policies/
 
 # Validation設定
 validation:

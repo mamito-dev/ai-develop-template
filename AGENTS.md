@@ -296,6 +296,7 @@ Diff確認（意図しない変更がないか確認）
 | 仕様 | `docs/specifications/` |
 | API Contract | `docs/api/` |
 | 開発ガイド | `docs/development/` |
+| Change Safety Policy | `.github/policies/change-safety-policy.md` |
 | 個別ルール | `.github/instructions/` |
 | 再利用可能Prompt | `.github/prompts/` |
 
