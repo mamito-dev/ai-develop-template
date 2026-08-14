@@ -99,6 +99,7 @@ AIはコードを書いただけで「完了」と判断してはいけない。
 | 仕様 | `docs/specifications/` |
 | API Contract | `docs/api/` |
 | 開発ガイド | `docs/development/` |
+| Change Safety Policy | `.github/policies/change-safety-policy.md` |
 | AIエージェント手順 | `AGENTS.md` |
 | 個別ルール | `.github/instructions/` |
 | 再利用可能Prompt | `.github/prompts/` |

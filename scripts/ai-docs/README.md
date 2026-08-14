@@ -89,6 +89,7 @@ pip install pyyaml
 | AI012 | Invalid metadata |
 | AI013 | Invalid manifest |
 | AI014 | Invalid naming convention |
+| AI015 | Invalid change safety policy |
 
 ## 検証内容
 
@@ -140,6 +141,16 @@ PromptのFront Matterで宣言された `skills` が実際に存在するか確�
 ### 9. Manifest検証 (AI013)
 
 `.github/ai-docs.yml` のYAML構文・必須フィールドを検証します。
+
+### 10. Change Safety Policy検証 (AI015)
+
+`.github/change-safety.yml` の以下を検証します。
+
+- YAML syntax
+- `version` フィールド
+- サポートされたカテゴリのみを使用
+- Policy Value（`allowed` / `restricted` / `forbidden`）の妥当性
+- 必須カテゴリの充足
 
 ## Manifest設定
 

@@ -37,6 +37,14 @@ Before review:
 
 Confirm that changes are related to the Issue.
 
+Compare Expected Changes vs Actual Changed Files and flag:
+
+- unauthorized dependency changes
+- unauthorized API changes
+- unauthorized database changes
+- unauthorized configuration changes
+- scope violations
+
 ### Step 2: Correctness Review
 
 Check:

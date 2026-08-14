@@ -44,6 +44,8 @@ Identify:
 - affected files;
 - affected components.
 
+Classify planned changes using `.github/policies/change-safety-policy.md` and confirm that Restricted changes are explicitly in Issue scope.
+
 ### Step 2: Confirm Existing Patterns
 
 Search for existing patterns before creating:
@@ -108,6 +110,8 @@ Check:
 - generated files;
 - secrets;
 - dependency changes.
+
+Compare Expected Changes vs Actual Changed Files and report out-of-scope changes as a separate improvement proposal.
 
 ## Rules
 

@@ -20,6 +20,7 @@ RULE_SOURCE_OF_TRUTH_CONFLICT   = "AI011"
 RULE_INVALID_METADATA           = "AI012"
 RULE_INVALID_MANIFEST           = "AI013"
 RULE_INVALID_NAMING_CONVENTION  = "AI014"
+RULE_INVALID_CHANGE_SAFETY_POLICY = "AI015"
 # 汎用 INFO ルール（統計情報・サマリー出力用）
 RULE_INFO                       = "AI000"
 
@@ -128,4 +129,5 @@ RULE_DESCRIPTIONS = {
     RULE_INVALID_METADATA:              "Invalid metadata",
     RULE_INVALID_MANIFEST:              "Invalid manifest",
     RULE_INVALID_NAMING_CONVENTION:     "Invalid naming convention",
+    RULE_INVALID_CHANGE_SAFETY_POLICY:  "Invalid change safety policy",
 }

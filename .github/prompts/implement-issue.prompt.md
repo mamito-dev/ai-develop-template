@@ -58,6 +58,15 @@ Before editing code, identify:
 
 If the plan requires an architectural or contract change, stop and report it before implementation.
 
+Before modifying files:
+
+1. Determine the Issue scope.
+2. Classify planned changes.
+3. Check `.github/policies/change-safety-policy.md`.
+4. Do not perform Restricted changes without explicit scope or approval.
+5. Do not perform Forbidden changes.
+6. Stop when a required change is UNKNOWN.
+
 ## Phase 4: Implement
 
 Implement the smallest change that satisfies the Issue.
